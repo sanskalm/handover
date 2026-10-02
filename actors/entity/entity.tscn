@@ -15,6 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://cv1sw1wrr1e5l" path="res://shared/audio/zapsplat_foley_footstep_single_wooden_hollow_floor_003_23313.wav" id="13_7a636"]
 [ext_resource type="AudioStream" uid="uid://db4usij3gk6j1" path="res://shared/audio/zapsplat_foley_footstep_single_wooden_hollow_floor_004_23314.wav" id="14_25hxp"]
 [ext_resource type="AudioStream" uid="uid://26d400d6788a" path="res://shared/audio/zapsplat_foley_footstep_single_wooden_hollow_floor_005_23315.wav" id="15_fe3hh"]
+[ext_resource type="PackedScene" uid="uid://b6iuwki8pj8w2" path="res://_debug/debug_manager.tscn" id="16_ngiu2"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_wf2kw"]
 radius = 0.15
@@ -113,3 +114,6 @@ emission_angle_enabled = true
 stream = SubResource("AudioStreamRandomizer_wf2kw")
 panning_strength = 2.0
 bus = &"SFX"
+
+[node name="DebugManager" parent="." unique_id=1764558288 node_paths=PackedStringArray("perception") instance=ExtResource("16_ngiu2")]
+perception = NodePath("../Senses/Perception")

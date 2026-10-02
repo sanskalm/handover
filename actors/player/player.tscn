@@ -50,12 +50,11 @@ mesh = SubResource("BoxMesh_wf2kw")
 
 [node name="Flashlight" type="SpotLight3D" parent="Head/LeftHand/Flashlight" unique_id=1186716980]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.21938324)
-light_color = Color(0.85882354, 0.8235294, 0.59607846, 1)
 light_projector = SubResource("GradientTexture2D_15y17")
 light_cull_mask = 4294967293
 shadow_enabled = true
 spot_range = 15.0
-spot_angle = 35.0
+spot_angle = 30.0
 spot_angle_attenuation = 1.5
 
 [node name="UVLight" type="MeshInstance3D" parent="Head/LeftHand" unique_id=704620502]
@@ -66,9 +65,11 @@ mesh = SubResource("BoxMesh_wf2kw")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.21938324)
 light_color = Color(0.7267442, 0.60220796, 0.901614, 1)
 light_projector = SubResource("GradientTexture2D_15y17")
+light_bake_mode = 0
 shadow_enabled = true
-spot_range = 10.0
-spot_angle = 35.0
+spot_range = 3.0
+spot_attenuation = 2.0
+spot_angle = 40.0
 spot_angle_attenuation = 1.5
 
 [node name="RightHand" type="Node3D" parent="Head" unique_id=1733176228]

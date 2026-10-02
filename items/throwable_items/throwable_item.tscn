@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dsddresbkoetj" path="res://items/throwable_items/throwable_item.gd" id="1_7lqih"]
 [ext_resource type="AudioStream" uid="uid://dh2yjefgwir4f" path="res://shared/audio/zapsplat_impact_wood_large_hollow_tree_trunk_hit_thud_001_104353.wav" id="2_ci5kw"]
+[ext_resource type="Script" uid="uid://dep8pgewkatnf" path="res://systems/interactable.gd" id="3_381i3"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7lqih"]
 rough = true
@@ -10,13 +11,23 @@ bounce = 0.3
 [sub_resource type="BoxShape3D" id="BoxShape3D_ci5kw"]
 size = Vector3(0.2, 0.2, 0.2)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ci5kw"]
+albedo_color = Color(0.5623493, 0.793133, 0.5154752, 1)
+metallic = 0.56
+roughness = 0.0
+
 [sub_resource type="BoxMesh" id="BoxMesh_7lqih"]
+material = SubResource("StandardMaterial3D_ci5kw")
 size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wf2kw"]
+radius = 0.42945582
 
 [node name="ThrowableItem" type="RigidBody3D" unique_id=1859830010]
 collision_layer = 8
 mass = 0.3
 physics_material_override = SubResource("PhysicsMaterial_7lqih")
+freeze = true
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 3
@@ -34,3 +45,11 @@ stream = ExtResource("2_ci5kw")
 volume_db = -5.0
 panning_strength = 1.5
 bus = &"SFX"
+
+[node name="Interactable" type="Area3D" parent="." unique_id=1647823503]
+script = ExtResource("3_381i3")
+interact_type = 2
+metadata/_custom_type_script = "uid://dep8pgewkatnf"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable" unique_id=1319603741]
+shape = SubResource("SphereShape3D_wf2kw")

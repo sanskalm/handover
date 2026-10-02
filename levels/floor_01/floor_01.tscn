@@ -9,7 +9,8 @@
 [ext_resource type="AudioStream" uid="uid://dmy3kdss38mb0" path="res://shared/audio/abandoned industrial background noise.ogg" id="7_2dc38"]
 [ext_resource type="PackedScene" uid="uid://1li5vrt4gig2" path="res://items/keys/key_room_a.tscn" id="8_r3akk"]
 [ext_resource type="Shader" uid="uid://bwgmpdgux33ec" path="res://shared/shaders/uv_clue.gdshader" id="9_hevvh"]
-[ext_resource type="Texture2D" uid="uid://btvcjrvcssn7c" path="res://_source/assets/images/Railway_Exchange_2nd_floor.png" id="9_ivn2f"]
+[ext_resource type="Texture2D" uid="uid://b34r4uj68x1h6" path="res://shared/textures/—Pngtree—blood splatter vector material_5991034.png" id="10_hevvh"]
+[ext_resource type="PackedScene" uid="uid://xgtx85cig8d6" path="res://items/throwable_items/throwable_item.tscn" id="11_1nmiy"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_33rug"]
 size = Vector3(14.812592, 3.6078491, 0.27005005)
@@ -31,9 +32,14 @@ size = Vector3(2.086914, 2, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_r3akk"]
 size = Vector3(2.086914, 2, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ivn2f"]
+[sub_resource type="QuadMesh" id="QuadMesh_wf2kw"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r3akk"]
 render_priority = 0
 shader = ExtResource("9_hevvh")
+shader_parameter/tex = ExtResource("10_hevvh")
+shader_parameter/color = Color(0, 1, 1, 1)
+shader_parameter/energy = 1.0
 
 [node name="Floor01" type="Node3D" unique_id=1956236836 node_paths=PackedStringArray("player_spawn_marker")]
 script = ExtResource("1_rjey2")
@@ -130,9 +136,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.486329, 0.9156491, 14.87197
 
 [node name="UVClues" type="Node3D" parent="." unique_id=1209254992]
 
-[node name="Map" type="Sprite3D" parent="UVClues" unique_id=1273681062]
-transform = Transform3D(0.015525935, 0, 0.29959798, 0, 0.3, 0, -0.29959798, 0, 0.015525935, -7.6932077, 1.1601003, 16.107569)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UVClues" unique_id=333137229]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -7.76097, 0.9783473, 15.942095)
 layers = 2
-material_override = SubResource("ShaderMaterial_ivn2f")
-gi_mode = 0
-texture = ExtResource("9_ivn2f")
+mesh = SubResource("QuadMesh_wf2kw")
+surface_material_override/0 = SubResource("ShaderMaterial_r3akk")
+
+[node name="ThrowableItem" parent="." unique_id=1859830010 instance=ExtResource("11_1nmiy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9491024, 0.204187, 15.75854)

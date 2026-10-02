@@ -1,21 +1,20 @@
 shader_type spatial;
-uniform sampler2D tex;
-void vertex() {
-	// Called for every vertex the material is visible on.
-}
+
+uniform sampler2D tex : source_color;
+uniform vec4 color:source_color = vec4(0,1,1,1);
+uniform float energy: hint_range(0, 16) = 1;
 
 void fragment() {
-	// Called for every pixel the material is visible on.
+	EMISSION = color.rgb * energy;
 	ALPHA = 0.0;
 }
 
 void light() {
-	// Called for every pixel for every light affecting the material.
-	// Uncomment to replace the default light processing function with this one.
 	vec4 pixel = textureLod(tex, UV, 1.0);
-	SPECULAR_LIGHT = vec3(0);
+	DIFFUSE_LIGHT = vec3(0.0);
+	SPECULAR_LIGHT = vec3(0.0);
 	ALPHA = ATTENUATION * pixel.a;
-	if (ATTENUATION == 1.0){
-		ALPHA=0.0;
+	if (ATTENUATION == 1.0) {
+		ALPHA = 0.0;
 	}
 }

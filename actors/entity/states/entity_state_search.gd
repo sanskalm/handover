@@ -22,17 +22,6 @@ func enter(data: Dictionary = { }) -> void:
 	index = 0
 	start_time = Time.get_ticks_msec() / 1000.0
 	_pausing = false
-	_draw_debug()
-
-
-func _draw_debug() -> void:
-	for i in range(points.size()):
-		var color := Color.YELLOW if i == index else Color.GRAY
-		DebugDraw3D.draw_sphere(points[i], 0.3, color, 5.0)
-		DebugDraw3D.draw_text(points[i] + Vector3.UP * 0.5, "P%d" % i, 16, color, 5.0)
-
-	var e := owner_node as Entity
-	DebugDraw3D.draw_line(e.global_position, points[0], Color.RED, 5.0)
 
 
 func _generate_points(origin: Vector3, search_dir: Vector3) -> Array[Vector3]:
@@ -66,9 +55,6 @@ func _generate_points(origin: Vector3, search_dir: Vector3) -> Array[Vector3]:
 func physics_process(delta: float) -> void:
 	var e := owner_node as Entity
 	var now := Time.get_ticks_msec() / 1000.0
-
-	if index < points.size():
-		DebugDraw3D.draw_line(e.global_position, points[index], Color.ORANGE)
 
 	if index >= points.size() or now - start_time > MAX_SEARCH_TIME:
 		transition_requested.emit(&"patrol", { })

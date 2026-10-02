@@ -1,14 +1,17 @@
+class_name ThrowableItem
 extends RigidBody3D
 
 @export var friction_mult: float = 0.95
 @onready var impact_audio: AudioStreamPlayer3D = $ImpactAudio
+@onready var interactable: Interactable = $Interactable
 
 
 func _ready():
 	body_entered.connect(_on_body_entered)
 
 
-func throw(throw_dir: Vector3, throw_force: float = 5.0):
+func throw(throw_dir: Vector3, throw_force: float = 3.0):
+	interactable.process_mode = Node.PROCESS_MODE_INHERIT
 	freeze = false
 
 	var throw_vector = throw_dir.normalized() * throw_force
@@ -18,7 +21,11 @@ func throw(throw_dir: Vector3, throw_force: float = 5.0):
 	add_child(timer)
 	timer.wait_time = 5.0
 	timer.start()
-	timer.timeout.connect(queue_free)
+	timer.timeout.connect(_freeze_physics)
+
+
+func _freeze_physics():
+	freeze = true
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
@@ -29,7 +36,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 				state.linear_velocity.z *= friction_mult
 
 
-func _on_body_entered(b: Node):
+func _on_body_entered(_b: Node):
 	var e := NoiseEvent.new(global_position, 50, NoiseEvent.Type.DISTRACTION)
 	Events.noise_emitted.emit(e)
 	impact_audio.play()

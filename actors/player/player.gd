@@ -18,6 +18,7 @@ const MOUSE_SENSITIVITY = 0.5
 @onready var uv_light: SpotLight3D = $Head/LeftHand/UVLight/UVLight
 @onready var interact_raycast: RayCast3D = $Head/InteractRaycast
 @onready var inventory: Inventory = $Inventory
+@onready var right_hand: Node3D = $Head/RightHand
 
 var is_moving: bool = false
 var is_crouching: bool = false
@@ -56,6 +57,16 @@ func _input(event: InputEvent) -> void:
 		_try_throwing_item()
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is not InputEventMouseMotion:
+		return
+	var yaw = event.relative.x * MOUSE_SENSITIVITY
+	var pitch = event.relative.y * MOUSE_SENSITIVITY
+	rotate_y(deg_to_rad(-yaw))
+	head.rotate_x(deg_to_rad(-pitch))
+	head.rotation.x = clampf(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+
+
 func _process(_delta: float) -> void:
 	pass
 
@@ -76,14 +87,24 @@ func _switch_light() -> void:
 	current_light.visible = true
 
 
+func try_pickup_throwing_item(item: ThrowableItem):
+	if not right_hand.get_children().is_empty():
+		return
+
+	item.reparent(right_hand, false)
+	item.position = Vector3.ZERO
+	item.rotation = Vector3.ZERO
+
+
 func _try_throwing_item():
-	var item_scene: RigidBody3D = throwable_scene.instantiate()
-	var forward_dir: Vector3 = -camera.global_transform.basis.z
-	var throw_dir: Vector3 = forward_dir + Vector3.UP * 0.2
-	throw_dir = throw_dir.normalized()
-	get_tree().current_scene.add_child(item_scene)
-	item_scene.global_position = camera.global_position + (forward_dir * 1.0)
-	item_scene.throw(throw_dir)
+	for c in right_hand.get_children():
+		if c is ThrowableItem:
+			var forward_dir: Vector3 = -camera.global_transform.basis.z
+			var throw_dir: Vector3 = (forward_dir + Vector3.UP * 0.2).normalized()
+
+			c.reparent(get_tree().current_scene, true)
+			c.throw(throw_dir)
+			break
 
 
 func _try_interact_raycast():
@@ -145,11 +166,5 @@ func _handle_footsteps_noise(delta: float) -> void:
 		footsteps_audio.play()
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is not InputEventMouseMotion:
-		return
-	var yaw = event.relative.x * MOUSE_SENSITIVITY
-	var pitch = event.relative.y * MOUSE_SENSITIVITY
-	rotate_y(deg_to_rad(-yaw))
-	head.rotate_x(deg_to_rad(-pitch))
-	head.rotation.x = clampf(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+func _add_to_inventory(item: Item):
+	pass
