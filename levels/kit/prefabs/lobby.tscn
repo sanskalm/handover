@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bcatlwy6wjkjt"]
+
+[ext_resource type="PackedScene" uid="uid://d0j0irbcti1iw" path="res://levels/kit/glbs/floor_tile.glb" id="1_ef105"]
+[ext_resource type="PackedScene" uid="uid://dpoulp2l3mwgf" path="res://levels/kit/glbs/wall_straight.glb" id="2_nu4vh"]
+[ext_resource type="PackedScene" uid="uid://cph7gvc148p70" path="res://levels/kit/glbs/wall_door_frame.glb" id="3_5xsj7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wf2kw"]
+size = Vector3(12, 0.375, 12)
+
+[node name="Lobby" type="Node3D" unique_id=349234903]
+
+[node name="Props" type="Node3D" parent="." unique_id=505882550]
+
+[node name="Architecture" type="Node3D" parent="." unique_id=1111523221]
+
+[node name="floor_tile" parent="Architecture" unique_id=126176046 instance=ExtResource("1_ef105")]
+
+[node name="floor_tile2" parent="Architecture" unique_id=483101560 instance=ExtResource("1_ef105")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="floor_tile3" parent="Architecture" unique_id=102745331 instance=ExtResource("1_ef105")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+
+[node name="floor_tile4" parent="Architecture" unique_id=1065421524 instance=ExtResource("1_ef105")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
+
+[node name="floor_tile5" parent="Architecture" unique_id=1140202680 instance=ExtResource("1_ef105")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+
+[node name="floor_tile6" parent="Architecture" unique_id=620207875 instance=ExtResource("1_ef105")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -4)
+
+[node name="floor_tile7" parent="Architecture" unique_id=2084302483 instance=ExtResource("1_ef105")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
+
+[node name="floor_tile8" parent="Architecture" unique_id=1394051949 instance=ExtResource("1_ef105")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -8)
+
+[node name="floor_tile9" parent="Architecture" unique_id=1478110657 instance=ExtResource("1_ef105")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
+
+[node name="wall_straight" parent="Architecture" unique_id=1238271819 instance=ExtResource("2_nu4vh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.9433393)
+
+[node name="wall_straight2" parent="Architecture" unique_id=1795052714 instance=ExtResource("2_nu4vh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -7.9433393)
+
+[node name="wall_door_frame" parent="Architecture" unique_id=1874878481 instance=ExtResource("3_5xsj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.939636, 0, -7.747123)
+
+[node name="Collisions" type="StaticBody3D" parent="." unique_id=1400843952]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Collisions" unique_id=253181060]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.033264, -0.07910156, -2.0321426)
+shape = SubResource("BoxShape3D_wf2kw")

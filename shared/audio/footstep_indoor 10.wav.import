@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bojipa7pq3hov"
+path="res://.godot/imported/footstep_indoor 10.wav-bbd2a0c22f5639aaf18343158bdb6fee.sample"
+
+[deps]
+
+source_file="res://shared/audio/footstep_indoor 10.wav"
+dest_files=["res://.godot/imported/footstep_indoor 10.wav-bbd2a0c22f5639aaf18343158bdb6fee.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

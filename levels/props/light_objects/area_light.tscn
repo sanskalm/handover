@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cfm1dm5mdyl18"]
+
+[node name="AreaLight" type="AreaLight3D" unique_id=52016522]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+shadow_enabled = true
+shadow_bias = 0.02
+shadow_normal_bias = 1.5
+shadow_reverse_cull_face = true
+area_range = 10.0

@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://xgtx85cig8d6"]
+
+[ext_resource type="Script" uid="uid://dsddresbkoetj" path="res://items/throwable_items/throwable_item.gd" id="1_7lqih"]
+[ext_resource type="AudioStream" uid="uid://dh2yjefgwir4f" path="res://shared/audio/zapsplat_impact_wood_large_hollow_tree_trunk_hit_thud_001_104353.wav" id="2_ci5kw"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7lqih"]
+rough = true
+bounce = 0.3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ci5kw"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7lqih"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[node name="ThrowableItem" type="RigidBody3D" unique_id=1859830010]
+collision_layer = 8
+mass = 0.3
+physics_material_override = SubResource("PhysicsMaterial_7lqih")
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 3
+angular_damp = 20.0
+script = ExtResource("1_7lqih")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1539870147]
+shape = SubResource("BoxShape3D_ci5kw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1111077042]
+mesh = SubResource("BoxMesh_7lqih")
+
+[node name="ImpactAudio" type="AudioStreamPlayer3D" parent="." unique_id=1587326494]
+stream = ExtResource("2_ci5kw")
+volume_db = -5.0
+panning_strength = 1.5
+bus = &"SFX"

@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://cdkae514q0u66"]
+
+[ext_resource type="Script" uid="uid://dk670nm8tfrn6" path="res://levels/floor_01/floor_01.gd" id="1_rjey2"]
+[ext_resource type="NavigationMesh" uid="uid://brxtdi7utbr2e" path="res://levels/floor_01/navigation_mesh.tres" id="2_3oavr"]
+[ext_resource type="PackedScene" uid="uid://dbsod1yuymxxf" path="res://levels/kit/glbs/floor_1_glb.glb" id="2_bweoo"]
+[ext_resource type="VoxelGIData" uid="uid://b766hkhuibxqg" path="res://levels/floor_01/floor_01.VoxelGI_data.res" id="3_rjey2"]
+[ext_resource type="Environment" uid="uid://du1ne1uywjcjs" path="res://levels/floor_01/floor_01_environment.tres" id="4_v6wpg"]
+[ext_resource type="PackedScene" uid="uid://7lxhlppcgqkp" path="res://levels/props/light_objects/ceiling_light.tscn" id="6_sb3ui"]
+[ext_resource type="AudioStream" uid="uid://dmy3kdss38mb0" path="res://shared/audio/abandoned industrial background noise.ogg" id="7_2dc38"]
+[ext_resource type="PackedScene" uid="uid://1li5vrt4gig2" path="res://items/keys/key_room_a.tscn" id="8_r3akk"]
+[ext_resource type="Shader" uid="uid://bwgmpdgux33ec" path="res://shared/shaders/uv_clue.gdshader" id="9_hevvh"]
+[ext_resource type="Texture2D" uid="uid://btvcjrvcssn7c" path="res://_source/assets/images/Railway_Exchange_2nd_floor.png" id="9_ivn2f"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33rug"]
+size = Vector3(14.812592, 3.6078491, 0.27005005)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oeg6p"]
+size = Vector3(0.16654968, 3.5825806, 17.406883)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_r3akk"]
+rough = true
+bounce = 0.3
+absorbent = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wf2kw"]
+size = Vector3(20, 0.604187, 24.04863)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wf2kw"]
+size = Vector3(2.086914, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_r3akk"]
+size = Vector3(2.086914, 2, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ivn2f"]
+render_priority = 0
+shader = ExtResource("9_hevvh")
+
+[node name="Floor01" type="Node3D" unique_id=1956236836 node_paths=PackedStringArray("player_spawn_marker")]
+script = ExtResource("1_rjey2")
+player_spawn_marker = {
+&"first": NodePath("PlayerSpawns/Spawn0")
+}
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=662718337]
+navigation_mesh = ExtResource("2_3oavr")
+
+[node name="Walls" type="StaticBody3D" parent="NavigationRegion3D" unique_id=104228254]
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="NavigationRegion3D/Walls" unique_id=2002986734]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0358734, 1.3039246, 8.100449)
+shape = SubResource("BoxShape3D_33rug")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Walls" unique_id=1958598805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9363174, 1.2912903, 4.717396)
+shape = SubResource("BoxShape3D_oeg6p")
+
+[node name="Floors" type="StaticBody3D" parent="NavigationRegion3D" unique_id=312430434]
+physics_material_override = SubResource("PhysicsMaterial_r3akk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Floors" unique_id=2126220202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1611938, -0.1979065, 7.9809494)
+shape = SubResource("BoxShape3D_wf2kw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D" unique_id=911508867]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7242997, 1.104187, 15.708842)
+cast_shadow = 2
+mesh = SubResource("BoxMesh_wf2kw")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/MeshInstance3D" unique_id=2113233128]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/MeshInstance3D/StaticBody3D" unique_id=1599734236]
+shape = SubResource("BoxShape3D_r3akk")
+
+[node name="Checkpoints" type="Node3D" parent="." unique_id=1263376171]
+
+[node name="Marker3D" type="Marker3D" parent="Checkpoints" unique_id=1655256691 groups=["checkpoint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8036728, 1.7229924, 4.382431)
+
+[node name="Marker3D2" type="Marker3D" parent="Checkpoints" unique_id=1809873672 groups=["checkpoint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6812911, 1.8541241, -5.9858856)
+
+[node name="EntitySpawn" type="Marker3D" parent="." unique_id=528377471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4743576, 2.5627055, 3.8877687)
+
+[node name="PlayerSpawns" type="Node3D" parent="." unique_id=1310571076]
+
+[node name="Spawn0" type="Marker3D" parent="PlayerSpawns" unique_id=579818152]
+transform = Transform3D(-0.45435128, 0, -0.8908226, 0, 1, 0, 0.8908226, 0, -0.45435128, -0.048763752, -0.060823202, 15.013746)
+
+[node name="floor_1_glb" parent="." unique_id=783055433 instance=ExtResource("2_bweoo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03618908, 2.3841858e-07, 0.0328722)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1469955919]
+environment = ExtResource("4_v6wpg")
+
+[node name="VoxelGI" type="VoxelGI" parent="." unique_id=248729876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.994751, 1.6273804, 7.9964123)
+size = Vector3(20.165771, 3.393921, 24.277515)
+data = ExtResource("3_rjey2")
+
+[node name="CeilingLight" parent="." unique_id=52016522 instance=ExtResource("6_sb3ui")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.6211491, 2.9420137, 12.651911)
+shadow_reverse_cull_face = false
+area_range = 5.0
+base_energy = 2.0
+flicker = true
+flicker_speed = 0.4
+bulb_intensity_range = 1.0
+bulb_flicker_chance = 0.4
+bulb_check_interval = 0.2
+
+[node name="CeilingLight2" parent="." unique_id=132368029 instance=ExtResource("6_sb3ui")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.6211491, 2.9420137, 1.76017)
+shadow_reverse_cull_face = false
+area_range = 5.0
+base_energy = 5.0
+flicker_speed = 0.1
+bulb_intensity_range = 1.0
+bulb_flicker_chance = 0.4
+bulb_check_interval = 0.2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1980832252]
+stream = ExtResource("7_2dc38")
+volume_db = -8.0
+autoplay = true
+bus = &"Ambience"
+
+[node name="KeyRoomA" parent="." unique_id=1274077333 instance=ExtResource("8_r3akk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.486329, 0.9156491, 14.871973)
+
+[node name="UVClues" type="Node3D" parent="." unique_id=1209254992]
+
+[node name="Map" type="Sprite3D" parent="UVClues" unique_id=1273681062]
+transform = Transform3D(0.015525935, 0, 0.29959798, 0, 0.3, 0, -0.29959798, 0, 0.015525935, -7.6932077, 1.1601003, 16.107569)
+layers = 2
+material_override = SubResource("ShaderMaterial_ivn2f")
+gi_mode = 0
+texture = ExtResource("9_ivn2f")
