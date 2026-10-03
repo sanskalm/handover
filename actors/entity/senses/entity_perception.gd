@@ -1,46 +1,75 @@
 class_name EntityPerception
 extends Node
-## Suspicion = "something's off" (builds from noise + vision, fades slowly)
-## Confidence = "I know what I saw" (only from vision, boosted by suspicion, fades fast)
-## Alertness = long-term paranoia (rises after each investigate/chase, fades very slowly)
+## Suspicion  = "something's off"       (noise + vision, fades slowly)
+## Confidence = "I know what I saw"     (vision only, boosted by suspicion, fades fast)
+## Alertness  = long-term paranoia      (rises after each investigate/chase, fades very slowly)
+##
+## Each meter has STAGES that the AI can react to long before the guard commits:
+##   Suspicion : CALM -> NOTICED -> ALERT -> (commit) investigate
+##   Confidence: NONE -> DOUBT   -> BELIEVE -> (commit) chase
 
-signal confidence_crossed_chase(pos: Vector3)
+enum SusStage {
+	CALM,
+	NOTICED,
+	ALERT,
+}
+enum ConfStage {
+	NONE,
+	DOUBT,
+	BELIEVE,
+}
+
+# Stage changes (use these to drive "look", "turn", "approach" behaviors)
+signal suspicion_stage_changed(stage: SusStage)
+signal confidence_stage_changed(stage: ConfStage)
+# Commits
 signal suspicion_crossed_investigate(pos: Vector3)
-signal confidence_lost(pos: Vector3) # chase target lost -> go search / calm down
+signal confidence_crossed_chase(pos: Vector3)
+signal confidence_lost(pos: Vector3)
 
-# ---------- TUNING ----------
-# Vision gains are PER SECOND at strength 1.0 (assumes on_vision is called every frame).
-@export var sus_vision_rate: float = 60.0
-@export var sus_vision_rate_unclear: float = 15.0
-@export var conf_vision_rate: float = 35.0
-@export var conf_vision_rate_unclear: float = 6.0
-# Noise gain is PER EVENT (a footstep, a thrown object...).
-@export var sus_noise_gain: float = 35.0
+# ---------- STAGES ----------
+@export_group("Stages")
+@export var sus_noticed_at: float = 25.0 # stop + glance toward source
+@export var sus_alert_at: float = 60.0 # turn toward it, slow approach
+@export var conf_doubt_at: float = 40.0 # "was that someone?" stare
+@export var conf_believe_at: float = 80.0 # "that's the player" move toward + warn
 
-# Decay only starts after a grace period (the entity "keeps thinking" about it).
+# ---------- COMMIT THRESHOLDS ----------
+@export_group("Commit")
+@export var investigate_threshold: float = 100.0
+@export var chase_threshold: float = 100.0
+@export var chase_release: float = 25.0 # confidence below this ends a chase
+@export var jumpy_window: float = 15.0 # saw you recently -> easier to chase
+@export var jumpy_bonus: float = 10.0
+@export var investigate_residual: float = 40.0 # suspicion left after investigating
+@export var investigate_cooldown: float = 3.0
+## Double take: meter must stay at threshold this long before committing.
+@export var reaction_investigate: float = 0.5
+@export var reaction_chase: float = 0.35
+@export var reaction_jitter: float = 0.3 # +/- per entity, so guards aren't clones
+
+# ---------- GAINS ----------
+@export_group("Gains")
+# Vision: PER SECOND at strength 1.0 (scaled by the sample interval).
+@export var sus_vision_rate: float = 45.0
+@export var sus_vision_rate_unclear: float = 12.0
+@export var conf_vision_rate: float = 50.0
+@export var conf_vision_rate_unclear: float = 8.0
+# Noise: PER EVENT (footstep, thrown object...).
+@export var sus_noise_gain: float = 50.0
+
+# ---------- DECAY ----------
+@export_group("Decay")
 @export var sus_grace: float = 3.0
 @export var conf_grace: float = 1.0
 @export var sus_decay_rate: float = 6.0
 @export var conf_decay_rate: float = 15.0
 
-@export var investigate_threshold: float = 50.0
-@export var chase_threshold: float = 65.0
-@export var chase_release: float = 25.0 # confidence must fall below this to end a chase
-@export var jumpy_window: float = 15.0 # recently saw something -> easier to chase
-@export var jumpy_bonus: float = 10.0
-@export var investigate_residual: float = 30.0 # suspicion left after investigating (not zero!)
-@export var investigate_cooldown: float = 3.0
-
-# Reaction delay ("double take"): meter must stay above threshold this long.
-@export var reaction_investigate: float = 0.5
-@export var reaction_chase: float = 0.35
-@export var reaction_jitter: float = 0.3 # +/- 30% random per entity -> not every guard is identical
-
-# Alertness (0..1)
+# ---------- ALERTNESS ----------
 const ALERT_ON_INVESTIGATE: float = 0.15
 const ALERT_ON_CHASE: float = 0.30
 const ALERT_DECAY: float = 0.01 # per second (~100s to fully relax)
-const ALERT_THRESHOLD_DROP: float = 15.0 # thresholds drop by up to this much
+const ALERT_THRESHOLD_DROP: float = 15.0 # commit thresholds drop by up to this
 const ALERT_SUS_BOOST: float = 0.5 # suspicion gains up to +50%
 
 var entity: Entity = null
@@ -62,6 +91,8 @@ var _inv_hold: float = 0.0
 var _investigate_ready_at: float = 0.0
 var _react_inv: float
 var _react_chase: float
+var _sus_stage: SusStage = SusStage.CALM
+var _conf_stage: ConfStage = ConfStage.NONE
 
 
 func _ready() -> void:
@@ -73,7 +104,8 @@ func _process(delta: float) -> void:
 	var now := _now()
 	alertness = max(0.0, alertness - ALERT_DECAY * delta)
 	_decay(delta, now)
-	_check_thresholds(delta, now)
+	_check_commits(delta, now)
+	_update_stages()
 
 # ---------- INPUTS ----------
 
@@ -104,9 +136,8 @@ func on_vision(strength: float, is_clear: bool, pos: Vector3, delta: float = 0.1
 	else:
 		suspicion += strength * sus_vision_rate_unclear * _sus_multiplier() * delta
 		confidence += strength * conf_vision_rate_unclear * delta
-		# Unclear glimpses keep suspicion alive but don't hold confidence up...
 		if _chasing:
-			_last_conf_stim = now # ...unless already chasing: any sighting keeps the chase going.
+			_last_conf_stim = now # any sighting keeps an active chase going
 
 	last_seen_pos = pos
 	last_seen_time = now
@@ -123,12 +154,21 @@ func force_spot(pos: Vector3) -> void:
 	_last_conf_stim = last_seen_time
 	if not _chasing: # called repeatedly at close range, so only emit once
 		_start_chase()
+	_update_stages()
 
-# ---------- PUBLIC READ-ONLY (debug UI / AI) ----------
+# ---------- PUBLIC READ-ONLY (AI / debug UI) ----------
 
 
 func is_chasing() -> bool:
 	return _chasing
+
+
+func get_suspicion_stage() -> SusStage:
+	return _sus_stage
+
+
+func get_confidence_stage() -> ConfStage:
+	return _conf_stage
 
 
 func get_chase_threshold() -> float:
@@ -138,19 +178,23 @@ func get_chase_threshold() -> float:
 func get_investigate_threshold() -> float:
 	return _get_investigate_threshold()
 
+
+## Where the guard should look right now: latest noise or sighting.
+func get_interest_pos() -> Vector3:
+	return last_noise_pos if last_noise_time > last_seen_time else last_seen_pos
+
 # ---------- INTERNALS ----------
 
 
 func _decay(delta: float, now: float) -> void:
-	# Don't decay while actively perceiving; wait out the grace period first.
-	var relax := 1.0 - 0.5 * alertness # paranoid entities calm down slower
+	var relax := 1.0 - 0.5 * alertness # paranoid guards calm down slower
 	if now - _last_sus_stim > sus_grace:
 		suspicion = max(0.0, suspicion - sus_decay_rate * relax * delta)
 	if now - _last_conf_stim > conf_grace:
 		confidence = max(0.0, confidence - conf_decay_rate * relax * delta)
 
 
-func _check_thresholds(delta: float, now: float) -> void:
+func _check_commits(delta: float, now: float) -> void:
 	# --- Chase ---
 	if not _chasing:
 		if confidence >= _get_chase_threshold(now):
@@ -171,10 +215,10 @@ func _check_thresholds(delta: float, now: float) -> void:
 		_inv_hold += delta
 		if _inv_hold >= _react_inv:
 			_inv_hold = 0.0
-			suspicion = investigate_residual # stays wary instead of resetting to zero
+			suspicion = investigate_residual # stays wary instead of resetting to 0
 			_investigate_ready_at = now + investigate_cooldown
 			alertness = min(1.0, alertness + ALERT_ON_INVESTIGATE)
-			suspicion_crossed_investigate.emit(_get_interest_pos())
+			suspicion_crossed_investigate.emit(get_interest_pos())
 	else:
 		_inv_hold = 0.0
 
@@ -185,24 +229,39 @@ func _start_chase() -> void:
 	_inv_hold = 0.0
 	alertness = min(1.0, alertness + ALERT_ON_CHASE)
 	confidence_crossed_chase.emit(last_seen_pos)
-	# Confidence is NOT zeroed: it decays naturally, so losing the player
-	# feels like "wait, where did they go?" rather than instant amnesia.
+	# Confidence is NOT zeroed: losing the player feels like "where did they go?"
+
+
+func _update_stages() -> void:
+	var s: SusStage = SusStage.CALM
+	if suspicion >= sus_alert_at:
+		s = SusStage.ALERT
+	elif suspicion >= sus_noticed_at:
+		s = SusStage.NOTICED
+	if s != _sus_stage:
+		_sus_stage = s
+		suspicion_stage_changed.emit(s)
+
+	var c: ConfStage = ConfStage.NONE
+	if confidence >= conf_believe_at:
+		c = ConfStage.BELIEVE
+	elif confidence >= conf_doubt_at:
+		c = ConfStage.DOUBT
+	if c != _conf_stage:
+		_conf_stage = c
+		confidence_stage_changed.emit(c)
 
 
 func _get_chase_threshold(now: float) -> float:
 	var t := chase_threshold - ALERT_THRESHOLD_DROP * alertness
 	if now - last_seen_time < jumpy_window:
 		t -= jumpy_bonus
-	return max(30.0, t)
+	# Never commit before the "believe" stage, so the stages always come first.
+	return max(conf_believe_at, t)
 
 
 func _get_investigate_threshold() -> float:
-	return max(25.0, investigate_threshold - ALERT_THRESHOLD_DROP * alertness)
-
-
-func _get_interest_pos() -> Vector3:
-	# Investigate whatever stimulus was most recent (a noise or a sighting).
-	return last_noise_pos if last_noise_time > last_seen_time else last_seen_pos
+	return max(sus_alert_at, investigate_threshold - ALERT_THRESHOLD_DROP * alertness)
 
 
 func _sus_multiplier() -> float:

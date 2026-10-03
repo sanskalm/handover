@@ -87,13 +87,14 @@ func _switch_light() -> void:
 	current_light.visible = true
 
 
-func try_pickup_throwing_item(item: ThrowableItem):
+func try_pickup_throwing_item(item: ThrowableItem) -> bool:
 	if not right_hand.get_children().is_empty():
-		return
+		return false
 
 	item.reparent(right_hand, false)
 	item.position = Vector3.ZERO
 	item.rotation = Vector3.ZERO
+	return true
 
 
 func _try_throwing_item():
@@ -102,7 +103,7 @@ func _try_throwing_item():
 			var forward_dir: Vector3 = -camera.global_transform.basis.z
 			var throw_dir: Vector3 = (forward_dir + Vector3.UP * 0.2).normalized()
 
-			c.reparent(get_tree().current_scene, true)
+			c.reparent(get_tree().get_first_node_in_group("level"), true)
 			c.throw(throw_dir)
 			break
 

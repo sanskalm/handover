@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://p3y1pf5xs5nt" path="res://actors/entity/states/entity_state_investigate.gd" id="5_yse61"]
 [ext_resource type="Script" uid="uid://c60bfyssvvla8" path="res://actors/entity/states/entity_state_search.gd" id="8_4nsah"]
 [ext_resource type="AudioStream" uid="uid://bc26ou7fwv5dh" path="res://shared/audio/monster growl.ogg" id="9_p3ar4"]
+[ext_resource type="Script" uid="uid://x87fbkew3tqi" path="res://actors/entity/states/entity_state_curious.gd" id="10_7a636"]
 [ext_resource type="AudioStream" uid="uid://dkn45h165ti3q" path="res://shared/audio/zapsplat_foley_footstep_single_wooden_hollow_floor_001_23311.wav" id="11_m0ku8"]
 [ext_resource type="AudioStream" uid="uid://btjc2l4qgcwip" path="res://shared/audio/zapsplat_foley_footstep_single_wooden_hollow_floor_002_23312.wav" id="12_ngiu2"]
 [ext_resource type="AudioStream" uid="uid://cv1sw1wrr1e5l" path="res://shared/audio/zapsplat_foley_footstep_single_wooden_hollow_floor_003_23313.wav" id="13_7a636"]
@@ -92,6 +93,10 @@ metadata/_custom_type_script = "uid://p3y1pf5xs5nt"
 [node name="Search" type="Node" parent="StateMachine" unique_id=780841030]
 script = ExtResource("8_4nsah")
 metadata/_custom_type_script = "uid://c60bfyssvvla8"
+
+[node name="Curious" type="Node" parent="StateMachine" unique_id=255826846]
+script = ExtResource("10_7a636")
+metadata/_custom_type_script = "uid://x87fbkew3tqi"
 
 [node name="Feet" type="Node3D" parent="." unique_id=1190365617]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9000366, 0)

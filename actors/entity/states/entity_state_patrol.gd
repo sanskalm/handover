@@ -52,12 +52,9 @@ func _pick_next_checkpoint() -> void:
 
 func handle_event(event: StringName, data: Dictionary = { }) -> void:
 	match event:
-		# &"noise_heard":
-		# 	print("noise heard from patrol")
-		# 	if data.get("strength", 0.0) > 0.25:
-		# 		transition_requested.emit(&"investigate", data)
 		&"player_spotted":
 			transition_requested.emit(&"chase", data)
 		&"suspicious":
-			print("suspicious from patrol")
 			transition_requested.emit(&"investigate", data)
+		&"curious":
+			transition_requested.emit(&"curious", data)

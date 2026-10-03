@@ -21,7 +21,6 @@ material = SubResource("StandardMaterial3D_ci5kw")
 size = Vector3(0.2, 0.2, 0.2)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_wf2kw"]
-radius = 0.42945582
 
 [node name="ThrowableItem" type="RigidBody3D" unique_id=1859830010]
 collision_layer = 8
@@ -53,3 +52,5 @@ metadata/_custom_type_script = "uid://dep8pgewkatnf"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable" unique_id=1319603741]
 shape = SubResource("SphereShape3D_wf2kw")
+
+[node name="Timer" type="Timer" parent="." unique_id=906165175]

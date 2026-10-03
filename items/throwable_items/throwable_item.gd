@@ -5,9 +5,13 @@ extends RigidBody3D
 @onready var impact_audio: AudioStreamPlayer3D = $ImpactAudio
 @onready var interactable: Interactable = $Interactable
 
+@onready var timer: Timer = $Timer
+
 
 func _ready():
 	body_entered.connect(_on_body_entered)
+	timer.wait_time = 5.0
+	timer.timeout.connect(freeze_physics)
 
 
 func throw(throw_dir: Vector3, throw_force: float = 3.0):
@@ -17,14 +21,10 @@ func throw(throw_dir: Vector3, throw_force: float = 3.0):
 	var throw_vector = throw_dir.normalized() * throw_force
 	apply_central_impulse(throw_vector)
 
-	var timer := Timer.new()
-	add_child(timer)
-	timer.wait_time = 5.0
 	timer.start()
-	timer.timeout.connect(_freeze_physics)
 
 
-func _freeze_physics():
+func freeze_physics():
 	freeze = true
 
 

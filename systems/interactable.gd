@@ -19,7 +19,10 @@ func interact(player: Player):
 		InteractType.SWITCH:
 			pass
 		InteractType.THROWABLE:
-			player.try_pickup_throwing_item(get_parent())
-			process_mode = Node.PROCESS_MODE_DISABLED
+			var picked_up: bool = player.try_pickup_throwing_item(get_parent())
+			if picked_up:
+				process_mode = Node.PROCESS_MODE_DISABLED
+				var item = get_parent() as ThrowableItem
+				item.freeze_physics()
 
 	interacted_with.emit(player)

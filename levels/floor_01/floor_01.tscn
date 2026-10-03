@@ -41,7 +41,7 @@ shader_parameter/tex = ExtResource("10_hevvh")
 shader_parameter/color = Color(0, 1, 1, 1)
 shader_parameter/energy = 1.0
 
-[node name="Floor01" type="Node3D" unique_id=1956236836 node_paths=PackedStringArray("player_spawn_marker")]
+[node name="Floor01" type="Node3D" unique_id=1956236836 node_paths=PackedStringArray("player_spawn_marker") groups=["level"]]
 script = ExtResource("1_rjey2")
 player_spawn_marker = {
 &"first": NodePath("PlayerSpawns/Spawn0")

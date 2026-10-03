@@ -38,6 +38,9 @@ func _ready() -> void:
 	perception.confidence_crossed_chase.connect(_on_confidence_chase)
 	perception.suspicion_crossed_investigate.connect(_on_suspicion_investigate)
 
+	perception.suspicion_stage_changed.connect(_on_stage_changed)
+	perception.confidence_stage_changed.connect(_on_stage_changed)
+
 
 func _on_confidence_chase(pos: Vector3) -> void:
 	state_machine.handle_event(&"player_spotted", { "pos": pos })
@@ -45,6 +48,26 @@ func _on_confidence_chase(pos: Vector3) -> void:
 
 func _on_suspicion_investigate(pos: Vector3) -> void:
 	state_machine.handle_event(&"suspicious", { "pos": pos })
+
+
+func _on_confidence_lost(pos: Vector3) -> void:
+	state_machine.handle_event(&"player_lost", { "pos": pos })
+
+
+func _on_stage_changed(_stage) -> void:
+	if perception.is_chasing():
+		return
+
+	var sus := perception.get_suspicion_stage()
+	var conf := perception.get_confidence_stage()
+
+	if sus == EntityPerception.SusStage.CALM and conf == EntityPerception.ConfStage.NONE:
+		state_machine.handle_event(&"calmed", { })
+	else:
+		state_machine.handle_event(
+			&"curious",
+			{ "pos": perception.get_interest_pos(), "sus_stage": sus, "conf_stage": conf },
+		)
 
 
 func set_player_ref(p: Player):

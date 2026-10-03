@@ -7,8 +7,8 @@
 [node name="Main" type="Node3D" unique_id=741398818]
 script = ExtResource("1_8fcwd")
 
-[node name="LevelHolder" type="Node3D" parent="." unique_id=526760189]
+[node name="LevelHolder" type="Node3D" parent="." unique_id=526760189 groups=["level"]]
 
-[node name="Player" parent="." unique_id=68945334 instance=ExtResource("2_vwfi5")]
+[node name="Player" parent="LevelHolder" unique_id=68945334 instance=ExtResource("2_vwfi5")]
 
-[node name="Entity" parent="." unique_id=1536275457 instance=ExtResource("3_yibi5")]
+[node name="Entity" parent="LevelHolder" unique_id=1536275457 instance=ExtResource("3_yibi5")]
