@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://5jwxtlb6v7bw"]
+
+[ext_resource type="PackedScene" uid="uid://cmagwdr7wp26b" path="res://_sandbox/character_body_3d.tscn" id="1_kbuqr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wf2kw"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wf2kw"]
+size = Vector3(10, 1, 10)
+
+[node name="Sandbox" type="Node3D" unique_id=351666089]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=160456585]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=500641607]
+shape = SubResource("BoxShape3D_wf2kw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1056076821]
+mesh = SubResource("BoxMesh_wf2kw")
+
+[node name="CharacterBody3D" parent="." unique_id=859456930 instance=ExtResource("1_kbuqr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6165482, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=319441892]

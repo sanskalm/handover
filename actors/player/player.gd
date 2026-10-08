@@ -46,25 +46,25 @@ func _ready():
 	current_light.visible = true
 
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("toggle_light"):
-		current_light.visible = !flashlight.visible
-	if event.is_action_pressed("switch_light"):
-		_switch_light()
-	if Input.is_action_just_pressed("interact"):
-		_try_interact_raycast()
-	if Input.is_action_just_pressed("throw"):
-		_try_throwing_item()
-
-
 func _unhandled_input(event: InputEvent) -> void:
-	if event is not InputEventMouseMotion:
+	if event is InputEventMouseMotion:
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			return
+		var xf := get_tree().root.get_final_transform()
+		var motion := (event.xformed_by(xf) as InputEventMouseMotion).relative
+		rotate_y(deg_to_rad(-motion.x * MOUSE_SENSITIVITY))
+		head.rotate_x(deg_to_rad(-motion.y * MOUSE_SENSITIVITY))
+		head.rotation.x = clampf(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 		return
-	var yaw = event.relative.x * MOUSE_SENSITIVITY
-	var pitch = event.relative.y * MOUSE_SENSITIVITY
-	rotate_y(deg_to_rad(-yaw))
-	head.rotate_x(deg_to_rad(-pitch))
-	head.rotation.x = clampf(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+
+	if event.is_action_pressed("toggle_light"):
+		current_light.visible = !current_light.visible
+	elif event.is_action_pressed("switch_light"):
+		_switch_light()
+	elif event.is_action_pressed("interact"):
+		_try_interact_raycast()
+	elif event.is_action_pressed("throw"):
+		_try_throwing_item()
 
 
 func _process(_delta: float) -> void:

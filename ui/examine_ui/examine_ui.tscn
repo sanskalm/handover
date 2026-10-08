@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cgoqkifqm72fi"]
+
+[node name="ExamineUI" type="Control" unique_id=97926968]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=860401192]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Object" type="Control" parent="HBoxContainer" unique_id=1701804352]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Description" type="Panel" parent="HBoxContainer" unique_id=1129739692]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextEdit" type="TextEdit" parent="HBoxContainer/Description" unique_id=1761094053]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

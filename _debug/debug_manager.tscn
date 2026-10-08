@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bbsuwkohbshfx" path="res://_debug/debug_manager.gd" id="1_naycs"]
 
 [node name="DebugManager" type="CanvasLayer" unique_id=1764558288]
+visible = false
 script = ExtResource("1_naycs")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=379686632]

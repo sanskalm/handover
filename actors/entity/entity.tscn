@@ -17,6 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://db4usij3gk6j1" path="res://shared/audio/zapsplat_foley_footstep_single_wooden_hollow_floor_004_23314.wav" id="14_25hxp"]
 [ext_resource type="AudioStream" uid="uid://26d400d6788a" path="res://shared/audio/zapsplat_foley_footstep_single_wooden_hollow_floor_005_23315.wav" id="15_fe3hh"]
 [ext_resource type="PackedScene" uid="uid://b6iuwki8pj8w2" path="res://_debug/debug_manager.tscn" id="16_ngiu2"]
+[ext_resource type="PackedScene" uid="uid://d0n8j2ck5j2g5" path="res://_source/assets/glb/npc_cewek10.glb" id="18_25hxp"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_wf2kw"]
 radius = 0.15
@@ -46,6 +47,7 @@ chase_speed = 2.0
 search_speed = 1.5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=408351654]
+visible = false
 mesh = SubResource("CapsuleMesh_wf2kw")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=819228532]
@@ -107,6 +109,7 @@ target_desired_distance = 0.5
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1714966937]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0014284849, 0.65682566, -0.28228748)
+visible = false
 mesh = SubResource("BoxMesh_wf2kw")
 
 [node name="GrowlAudio" type="AudioStreamPlayer3D" parent="." unique_id=1274659837]
@@ -122,3 +125,6 @@ bus = &"SFX"
 
 [node name="DebugManager" parent="." unique_id=1764558288 node_paths=PackedStringArray("perception") instance=ExtResource("16_ngiu2")]
 perception = NodePath("../Senses/Perception")
+
+[node name="npc_cewek10" parent="." unique_id=612539290 instance=ExtResource("18_25hxp")]
+transform = Transform3D(-0.6, 0, -5.2453668e-08, 0, 0.6, 0, 5.2453668e-08, 0, -0.6, 0, 0, 0)
