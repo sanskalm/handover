@@ -87,7 +87,7 @@ func _switch_light() -> void:
 	current_light.visible = true
 
 
-func try_pickup_throwing_item(item: ThrowableItem) -> bool:
+func try_hold(item: ThrowableItem) -> bool:
 	if not right_hand.get_children().is_empty():
 		return false
 
@@ -167,5 +167,10 @@ func _handle_footsteps_noise(delta: float) -> void:
 		footsteps_audio.play()
 
 
-func _add_to_inventory(item: Item):
+func open_inspect(item: InspectOnlyItem):
 	pass
+
+
+func add_to_inventory(item: CollectibleItem):
+	if item.item_data.display_name:
+		UiManager.notify("Found %s" % item.item_data.display_name)

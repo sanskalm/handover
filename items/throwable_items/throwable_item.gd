@@ -12,6 +12,7 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	timer.wait_time = 5.0
 	timer.timeout.connect(freeze_physics)
+	interactable.interacted_with.connect(_on_interacted)
 
 
 func throw(throw_dir: Vector3, throw_force: float = 3.0):
@@ -26,6 +27,12 @@ func throw(throw_dir: Vector3, throw_force: float = 3.0):
 
 func freeze_physics():
 	freeze = true
+
+
+func _on_interacted(player: Player) -> void:
+	if player.try_hold(self):
+		interactable.process_mode = Node.PROCESS_MODE_DISABLED
+		freeze = true
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:

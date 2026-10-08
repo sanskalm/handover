@@ -1,26 +1,16 @@
 class_name ItemData
+extends Resource
 
-var id: String
-var display_name: String
-var description: String
-var icon: Texture2D
-var type: ItemType
-
-enum ItemType {
-	KEY_ITEM,
-	CONSUMABLE,
+enum UseType {
+	NONE,
+	INSPECT,
+	CONSUME,
 }
 
-
-func _init(
-	p_id: String,
-	p_display_name: String,
-	p_type: ItemType,
-	p_description: String = "",
-	p_icon: Texture2D = null,
-):
-	id = p_id
-	display_name = p_display_name
-	type = p_type
-	description = p_description
-	icon = p_icon
+@export var id: StringName
+@export var display_name: String
+@export var icon: Texture2D
+@export var use_type: UseType = UseType.NONE
+@export_multiline var text: String
+@export var inspect_on_pickup: bool = false
+@export var heal_amount: int = 0

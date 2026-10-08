@@ -1,18 +1,16 @@
 [gd_scene format=3 uid="uid://1li5vrt4gig2"]
 
 [ext_resource type="PackedScene" uid="uid://bnni7rem8c6ko" path="res://systems/interactable.tscn" id="1_iuswu"]
-[ext_resource type="Script" uid="uid://dm0pf1e7s4ujl" path="res://items/keys/key_room_a.gd" id="1_wa68u"]
-[ext_resource type="Texture2D" uid="uid://b1ayll3wrv5id" path="res://icon.svg" id="2_lgn88"]
+[ext_resource type="Script" uid="uid://btahrwxxo15py" path="res://items/collectible_item.gd" id="1_wa68u"]
+[ext_resource type="Resource" uid="uid://dycsdbufq5hbo" path="res://items/keys/data/key_room_a.tres" id="2_lgn88"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wf2kw"]
 size = Vector3(0.2578125, 0.18066406, 0.36914063)
 
-[node name="KeyRoomA" type="Node3D" unique_id=1274077333]
+[node name="KeyRoomA" type="Node3D" unique_id=1229850999]
 script = ExtResource("1_wa68u")
-item_name = "Key Room A"
-item_id = &"key_room_a"
-icon = ExtResource("2_lgn88")
-description = "Key that unlocks room a"
+item_data = ExtResource("2_lgn88")
+metadata/_custom_type_script = "uid://btahrwxxo15py"
 
 [node name="Interactable" parent="." unique_id=2078349304 instance=ExtResource("1_iuswu")]
 
